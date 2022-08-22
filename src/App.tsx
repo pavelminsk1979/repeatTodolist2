@@ -1,9 +1,10 @@
 import React, {useState} from 'react';
 import './App.css';
 import {Todolist} from "./Todolist";
+import {v1} from "uuid";
 
 export type TaskType = {
-    id: number
+    id: string
     title: string
     isDone: boolean
 }
@@ -12,14 +13,23 @@ export type FilterType='all'|'yes'|'no'
 
 function App() {
     const [tasks, setTasks] = useState([
-            {id: 1, title: 'Earn money', isDone: true},
-            {id: 2, title: 'Play football', isDone: false},
-            {id: 3, title: 'Eat food', isDone: true},
-            {id: 4, title: 'Drink vodka', isDone: false},
+            {id: v1(), title: 'Earn money', isDone: true},
+            {id: v1(), title: 'Play football', isDone: false},
+            {id: v1(), title: 'Eat food', isDone: true},
+            {id: v1(), title: 'Drink vodka', isDone: false},
         ]
     )
 
-    const removeTask = (idTask:number) => {
+    const changeChecboxTask = (idTask:string,isDone:boolean) => {
+        setTasks(tasks.map(el=>el.id===idTask
+        ?{...el,isDone}:el))
+    }
+
+    const addedTask=(text:string)=>{
+        setTasks([{id: v1(),title: text,isDone: false},...tasks])
+    }
+
+    const removeTask = (idTask:string) => {
         setTasks(tasks.filter(t=>t.id!==idTask))
     }
 
@@ -34,6 +44,8 @@ function App() {
     return (
         <div className="App">
             <Todolist
+                changeChecboxTask={changeChecboxTask}
+                addedTask={addedTask}
                 filterTasks={filterTasks}
                 removeTask={removeTask}
                 header={'What to do'}

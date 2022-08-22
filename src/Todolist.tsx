@@ -1,21 +1,39 @@
-import React from 'react';
+import React, {ChangeEvent, useState} from 'react';
 import {FilterType, TaskType} from "./App";
 
 type TodolistType = {
     header: string
     tasks: Array<TaskType>
-    removeTask:(idTask:number)=>void
-    filterTasks:(valueButtonFilter:FilterType)=>void
+    removeTask: (idTask: string) => void
+    filterTasks: (valueButtonFilter: FilterType) => void
+    addedTask: (text: string) => void
+    changeChecboxTask: (idTask: string, isDone: boolean) => void
 }
 
 export function Todolist(props: TodolistType) {
+    const [text, setText] = useState('')
 
-    const removeHundler = (idTask:number) => {
-      props.removeTask(idTask)
+    const inputStateForText = (event: ChangeEvent<HTMLInputElement>) => {
+        setText(event.currentTarget.value)
     }
 
-    const filterTasksHandler = (valueButtonFilter:FilterType) => {
-      props.filterTasks(valueButtonFilter)
+    const addedTaskHandler = () => {
+        if (text.trim() !== '') {
+            props.addedTask(text.trim())
+        }
+        setText('')
+    }
+
+    const removeHundler = (idTask: string) => {
+        props.removeTask(idTask)
+    }
+
+    const filterTasksHandler = (valueButtonFilter: FilterType) => {
+        props.filterTasks(valueButtonFilter)
+    }
+
+    const changeCheckboxHandler = (idTask: string, isDone: boolean) => {
+        props.changeChecboxTask(idTask, isDone)
     }
 
     return (
@@ -23,8 +41,13 @@ export function Todolist(props: TodolistType) {
             <div>
                 <h3>{props.header}</h3>
                 <div>
-                    <input/>
-                    <button>new task</button>
+                    <input
+                        value={text}
+                        onChange={inputStateForText}
+                    />
+                    <button onClick={addedTaskHandler}>
+                        new task
+                    </button>
                 </div>
                 <ul>
                     {
@@ -32,20 +55,23 @@ export function Todolist(props: TodolistType) {
                             return (
                                 <li key={tsk.id}>
                                     <input
+                                        onChange={(event)=>
+                                        changeCheckboxHandler(tsk.id,
+                                            event.currentTarget.checked)}
                                         type="checkbox"
                                         checked={tsk.isDone}
                                     />
                                     <span>{tsk.title}</span>
-                                    <button onClick={()=>removeHundler(tsk.id)}>remove</button>
+                                    <button onClick={() => removeHundler(tsk.id)}>remove</button>
                                 </li>
                             )
                         })
                     }
                 </ul>
                 <div>
-                    <button onClick={()=>filterTasksHandler('all')}>ALL</button>
-                    <button onClick={()=>filterTasksHandler('yes')}>YES</button>
-                    <button onClick={()=>filterTasksHandler('no')}>NO</button>
+                    <button onClick={() => filterTasksHandler('all')}>ALL</button>
+                    <button onClick={() => filterTasksHandler('yes')}>YES</button>
+                    <button onClick={() => filterTasksHandler('no')}>NO</button>
                 </div>
             </div>
         </div>
