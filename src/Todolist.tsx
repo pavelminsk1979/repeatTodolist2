@@ -1,12 +1,23 @@
 import React from 'react';
-import {TaskType} from "./App";
+import {FilterType, TaskType} from "./App";
 
 type TodolistType = {
     header: string
     tasks: Array<TaskType>
+    removeTask:(idTask:number)=>void
+    filterTasks:(valueButtonFilter:FilterType)=>void
 }
 
 export function Todolist(props: TodolistType) {
+
+    const removeHundler = (idTask:number) => {
+      props.removeTask(idTask)
+    }
+
+    const filterTasksHandler = (valueButtonFilter:FilterType) => {
+      props.filterTasks(valueButtonFilter)
+    }
+
     return (
         <div>
             <div>
@@ -25,15 +36,16 @@ export function Todolist(props: TodolistType) {
                                         checked={tsk.isDone}
                                     />
                                     <span>{tsk.title}</span>
+                                    <button onClick={()=>removeHundler(tsk.id)}>remove</button>
                                 </li>
                             )
                         })
                     }
                 </ul>
                 <div>
-                    <button>ALL</button>
-                    <button>YES</button>
-                    <button>NO</button>
+                    <button onClick={()=>filterTasksHandler('all')}>ALL</button>
+                    <button onClick={()=>filterTasksHandler('yes')}>YES</button>
+                    <button onClick={()=>filterTasksHandler('no')}>NO</button>
                 </div>
             </div>
         </div>
