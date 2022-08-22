@@ -20,7 +20,7 @@ function App() {
         ]
     )
 
-    const changeChecboxTask = (idTask:string,isDone:boolean) => {
+    const changeCheckboxTask = (idTask:string,isDone:boolean) => {
         setTasks(tasks.map(el=>el.id===idTask
         ?{...el,isDone}:el))
     }
@@ -44,7 +44,8 @@ function App() {
     return (
         <div className="App">
             <Todolist
-                changeChecboxTask={changeChecboxTask}
+                filterValue={filter}
+                changeCheckboxTask={changeCheckboxTask}
                 addedTask={addedTask}
                 filterTasks={filterTasks}
                 removeTask={removeTask}
