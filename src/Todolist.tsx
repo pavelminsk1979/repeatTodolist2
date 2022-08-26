@@ -5,11 +5,12 @@ import st from './Todolist.module.css';
 type TodolistType = {
     header: string
     tasks: Array<TaskType>
-    removeTask: (idTask: string) => void
-    filterTasks: (valueButtonFilter: FilterType) => void
-    addedTask: (text: string) => void
-    changeCheckboxTask: (idTask: string, isDone: boolean) => void
+    removeTask: (idTodol:string,idTask: string) => void
+    filterTasks: (idTodol:string,valueButtonFilter: FilterType) => void
+    addedTask: (idTodol:string,text: string) => void
+    changeCheckboxTask: (idTodol:string,idTask: string, isDone: boolean) => void
     filterValue:FilterType
+    todolistId:string
 }
 
 export function Todolist(props: TodolistType) {
@@ -23,7 +24,7 @@ export function Todolist(props: TodolistType) {
 
     const addedTaskHandler = () => {
         if (text.trim() !== '') {
-            props.addedTask(text.trim())
+            props.addedTask(props.todolistId,text.trim())
         }else {setInputRed('Text requaried!')}
         setText('')
     }
@@ -34,22 +35,26 @@ export function Todolist(props: TodolistType) {
     }
 
     const removeHundler = (idTask: string) => {
-        props.removeTask(idTask)
+        props.removeTask(props.todolistId,idTask)
     }
 
-    const filterTasksHandler = (valueButtonFilter: FilterType) => {
-        props.filterTasks(valueButtonFilter)
+    const filterTasksHandler = (idTodol:string,valueButtonFilter: FilterType) => {
+        props.filterTasks(idTodol,valueButtonFilter)
     }
 
     const changeCheckboxHandler = (idTask: string, isDone: boolean) => {
-        props.changeCheckboxTask(idTask, isDone)
+        props.changeCheckboxTask(props.todolistId,idTask, isDone)
     }
 
 
     return (
         <div>
             <div>
-                <h3>{props.header}</h3>
+                <h3>
+                    {props.header}
+                    <button>del</button>
+                </h3>
+
                 <div>
                     <input
                         className={inputRed?st.redInput:''}
@@ -83,11 +88,14 @@ export function Todolist(props: TodolistType) {
                 </ul>
                 <div>
                     <button className={props.filterValue==='all'?st.buttonFilter:''}
-                        onClick={() => filterTasksHandler('all')}>ALL</button>
+                        onClick={() => filterTasksHandler(
+                            props.todolistId,'all')}>ALL</button>
                     <button className={props.filterValue==='yes'?st.buttonFilter:''}
-                        onClick={() => filterTasksHandler('yes')}>YES</button>
+                        onClick={() => filterTasksHandler(
+                            props.todolistId,'yes')}>YES</button>
                     <button className={props.filterValue==='no'?st.buttonFilter:''}
-                        onClick={() => filterTasksHandler('no')}>NO</button>
+                        onClick={() => filterTasksHandler(
+                            props.todolistId,'no')}>NO</button>
                 </div>
             </div>
         </div>
