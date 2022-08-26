@@ -1,49 +1,51 @@
-import React, {ChangeEvent, KeyboardEvent, useState} from 'react';
+import React from 'react';
 import {FilterType, TaskType} from "./App";
 import st from './Todolist.module.css';
+import {TemplateCreatingTaskTudulist} from "./TemplateCreatingTaskTudulist";
+import {TemplateEditTitle} from "./TemplateEditTitle";
 
 type TodolistType = {
     header: string
     tasks: Array<TaskType>
-    removeTask: (idTodol:string,idTask: string) => void
-    filterTasks: (idTodol:string,valueButtonFilter: FilterType) => void
-    addedTask: (idTodol:string,text: string) => void
-    changeCheckboxTask: (idTodol:string,idTask: string, isDone: boolean) => void
-    filterValue:FilterType
-    todolistId:string
+    removeTask: (idTodol: string, idTask: string) => void
+    filterTasks: (idTodol: string, valueButtonFilter: FilterType) => void
+    addedTask: (idTodol: string, text: string) => void
+    changeCheckboxTask: (idTodol: string, idTask: string, isDone: boolean) => void
+    filterValue: FilterType
+    todolistId: string
+    removeTodolist: (idTodol: string) => void
+    editTodolistTitle: (idTodol: string, editTitle: string) => void
+    editTaskTitle: (idTodol: string,idTask: string,editTitle: string) => void
 }
 
 export function Todolist(props: TodolistType) {
-    const [text, setText] = useState('')
-    const [inputRed, setInputRed] = useState<string | null>(null)
 
-    const inputStateForText = (event: ChangeEvent<HTMLInputElement>) => {
-        setText(event.currentTarget.value)
-        setInputRed(null)
+    const addedTaskHandler = (text: string) => {
+        props.addedTask(props.todolistId, text)
     }
 
-    const addedTaskHandler = () => {
-        if (text.trim() !== '') {
-            props.addedTask(props.todolistId,text.trim())
-        }else {setInputRed('Text requaried!')}
-        setText('')
-    }
-    const EnterForAddedTask = (event: KeyboardEvent<HTMLInputElement>) => {
-        if (event.key === 'Enter') {
-            addedTaskHandler()
-        }
+    const removeTodolistHandler = () => {
+        props.removeTodolist(props.todolistId)
     }
 
     const removeHundler = (idTask: string) => {
-        props.removeTask(props.todolistId,idTask)
+        props.removeTask(props.todolistId, idTask)
     }
 
-    const filterTasksHandler = (idTodol:string,valueButtonFilter: FilterType) => {
-        props.filterTasks(idTodol,valueButtonFilter)
+    const filterTasksHandler = (idTodol: string, valueButtonFilter: FilterType) => {
+        props.filterTasks(idTodol, valueButtonFilter)
     }
 
     const changeCheckboxHandler = (idTask: string, isDone: boolean) => {
-        props.changeCheckboxTask(props.todolistId,idTask, isDone)
+        props.changeCheckboxTask(props.todolistId, idTask, isDone)
+    }
+
+    const editTodolistTitleHandler = (editTitle: string) => {
+        props.editTodolistTitle(props.todolistId, editTitle)
+    }
+
+    const editTaskTitleHandler = (idTask: string, editTitle: string) => {
+      props.editTaskTitle(props.todolistId,idTask,editTitle)
     }
 
 
@@ -51,22 +53,18 @@ export function Todolist(props: TodolistType) {
         <div>
             <div>
                 <h3>
-                    {props.header}
-                    <button>del</button>
+                    <TemplateEditTitle
+                        callback={editTodolistTitleHandler}
+                        title={props.header}
+                    />
+
+                    <button onClick={removeTodolistHandler}>del</button>
                 </h3>
 
-                <div>
-                    <input
-                        className={inputRed?st.redInput:''}
-                        onKeyPress={EnterForAddedTask}
-                        value={text}
-                        onChange={inputStateForText}
-                    />
-                    <button onClick={addedTaskHandler}>
-                        new task
-                    </button>
-                    {inputRed&&<div className={st.redAllert}>{inputRed}</div>}
-                </div>
+                <TemplateCreatingTaskTudulist
+                    name={'new task'}
+                    callback={addedTaskHandler}
+                />
                 <ul>
                     {
                         props.tasks.map(tsk => {
@@ -79,7 +77,11 @@ export function Todolist(props: TodolistType) {
                                         type="checkbox"
                                         checked={tsk.isDone}
                                     />
-                                    <span>{tsk.title}</span>
+                                    <TemplateEditTitle
+                                        title={tsk.title}
+                                        callback={
+                                            (editTitle: string) => editTaskTitleHandler(
+                                                tsk.id, editTitle)}/>
                                     <button onClick={() => removeHundler(tsk.id)}>remove</button>
                                 </li>
                             )
@@ -87,15 +89,18 @@ export function Todolist(props: TodolistType) {
                     }
                 </ul>
                 <div>
-                    <button className={props.filterValue==='all'?st.buttonFilter:''}
-                        onClick={() => filterTasksHandler(
-                            props.todolistId,'all')}>ALL</button>
-                    <button className={props.filterValue==='yes'?st.buttonFilter:''}
-                        onClick={() => filterTasksHandler(
-                            props.todolistId,'yes')}>YES</button>
-                    <button className={props.filterValue==='no'?st.buttonFilter:''}
-                        onClick={() => filterTasksHandler(
-                            props.todolistId,'no')}>NO</button>
+                    <button className={props.filterValue === 'all' ? st.buttonFilter : ''}
+                            onClick={() => filterTasksHandler(
+                                props.todolistId, 'all')}>ALL
+                    </button>
+                    <button className={props.filterValue === 'yes' ? st.buttonFilter : ''}
+                            onClick={() => filterTasksHandler(
+                                props.todolistId, 'yes')}>YES
+                    </button>
+                    <button className={props.filterValue === 'no' ? st.buttonFilter : ''}
+                            onClick={() => filterTasksHandler(
+                                props.todolistId, 'no')}>NO
+                    </button>
                 </div>
             </div>
         </div>

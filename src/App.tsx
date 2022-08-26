@@ -2,6 +2,7 @@ import React, {useState} from 'react';
 import './App.css';
 import {Todolist} from "./Todolist";
 import {v1} from "uuid";
+import {TemplateCreatingTaskTudulist} from "./TemplateCreatingTaskTudulist";
 
 
 export type TaskType = {
@@ -17,6 +18,10 @@ type TodolistsStateType = {
     filter: FilterType
 }
 
+type TasksStateType={
+[key:string]:Array<TaskType>
+}
+
 function App() {
     const todolist1 = v1()
     const todolist2 = v1()
@@ -24,7 +29,7 @@ function App() {
         {id: todolist1, title: 'What to do', filter: 'all'},
         {id: todolist2, title: 'What to buy', filter: 'yes'}
     ])
-    const [tasks, setTasks] = useState({
+    const [tasks, setTasks] = useState<TasksStateType>({
             [todolist1]: [
                 {id: v1(), title: 'Earn money', isDone: true},
                 {id: v1(), title: 'Play football', isDone: false},
@@ -39,6 +44,28 @@ function App() {
             ],
         }
     )
+
+    const editTaskTitle = (idTodol: string,idTask: string,editTitle: string) => {
+        setTasks({...tasks,[idTodol]:tasks[idTodol].map(
+            el=>el.id===idTask?{...el,title:editTitle}:el)})
+    }
+
+    const editTodolistTitle = (idTodol: string,editTitle:string) => {
+        setTodolist(todolists.map(el=>el.id===idTodol
+        ?{...el,title:editTitle}:el))
+    }
+
+    const addedTodolistHandler = (text: string) => {
+        const newTodolist1 = v1()
+        setTodolist([{id: newTodolist1, title: text, filter: 'all'},...todolists])
+        setTasks({...tasks,[newTodolist1]:[]})
+    }
+
+    const removeTodolist = (idTodol:string) => {
+        setTodolist(todolists.filter(e=>e.id!==idTodol))
+        delete tasks[idTodol]
+        setTasks({...tasks})
+    }
 
     const changeCheckboxTask = (idTodol:string,idTask: string, isDone: boolean) => {
         setTasks({...tasks,[idTodol]:tasks[idTodol].map(
@@ -64,6 +91,10 @@ function App() {
 
     return (
         <div className="App">
+            <TemplateCreatingTaskTudulist
+                name={'new todolist'}
+            callback={addedTodolistHandler}
+            />
             {
                 todolists.map(todol => {
 
@@ -77,6 +108,9 @@ function App() {
 
                     return (
                         <Todolist
+                            editTaskTitle={editTaskTitle}
+                            editTodolistTitle={editTodolistTitle}
+                            removeTodolist={removeTodolist}
                             todolistId={todol.id}
                             key={todol.id}
                             filterValue={todol.filter}
