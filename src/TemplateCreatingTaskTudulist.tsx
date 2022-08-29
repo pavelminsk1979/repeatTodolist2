@@ -51,7 +51,7 @@ export const TemplateCreatingTaskTudulist = (props:TemplateCreatingTaskTudulistT
                 maxHeight: '40px',
                 minWidth: '75px',
                 minHeight: '40px',
-                backgroundColor:'purple',
+                backgroundColor:'sienna',
                 color: "white",
 
             }}

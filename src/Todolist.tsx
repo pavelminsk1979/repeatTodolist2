@@ -61,7 +61,7 @@ export function Todolist(props: TodolistType) {
                     />
                     <IconButton
                         style={{
-                            color: "crimson",
+                            color: "crimson"
                         }}
                         onClick={removeTodolistHandler}>
                         <DeleteOutline/>
@@ -79,7 +79,7 @@ export function Todolist(props: TodolistType) {
                                 <div key={tsk.id}>
                                     <Checkbox
                                         style={{
-                                            color: "purple",
+                                            color: "sienna",
                                         }}
                                         size={"small"}
                                         onChange={(event) =>
@@ -87,7 +87,6 @@ export function Todolist(props: TodolistType) {
                                                 event.currentTarget.checked)}
                                         checked={tsk.isDone}
                                         defaultChecked
-                                        color="primary"
                                         inputProps={{ 'aria-label': 'secondary checkbox' }}
                                     />
                                     <TemplateEditTitle
@@ -117,7 +116,7 @@ export function Todolist(props: TodolistType) {
                             maxHeight: '25px',
                             minWidth: '60px',
                             minHeight: '25px',
-                            backgroundColor: props.filterValue === 'all' ? 'purple' : 'blue',
+                            backgroundColor: props.filterValue === 'all' ? 'sienna' : 'silver',
                             color: "white",
 
                         }}
@@ -130,7 +129,7 @@ export function Todolist(props: TodolistType) {
                             maxHeight: '25px',
                             minWidth: '60px',
                             minHeight: '25px',
-                            backgroundColor: props.filterValue === 'yes' ? 'purple' : 'blue',
+                            backgroundColor: props.filterValue === 'yes' ? 'sienna' : 'silver',
                             color: "white",
                             marginLeft: '10px'
                         }}
@@ -143,7 +142,7 @@ export function Todolist(props: TodolistType) {
                             maxHeight: '25px',
                             minWidth: '60px',
                             minHeight: '25px',
-                            backgroundColor: props.filterValue === 'no' ? 'purple' : 'blue',
+                            backgroundColor: props.filterValue === 'no' ? 'sienna' : 'silver',
                             color: "white",
                             marginLeft: '10px'
                         }}
