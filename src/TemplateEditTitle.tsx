@@ -1,4 +1,5 @@
 import {ChangeEvent, useState} from "react";
+import {TextField} from "@material-ui/core";
 
 type TemplateEditTitleType = {
     title:string
@@ -24,11 +25,15 @@ export const TemplateEditTitle = (props: TemplateEditTitleType) => {
 
     return (
         toggleForEdit
-            ? <input
-            onBlur={editTitleHandler}
-            autoFocus
-            onChange={setEditTitleHandler}
-                value={editTitle}/>
+            ?  <TextField
+            size={"small"}
+                onBlur={editTitleHandler}
+                autoFocus
+                onChange={setEditTitleHandler}
+                value={editTitle}
+                id="standard-basic"
+                label="do edit" />
+
             :<span onDoubleClick={onDoubleClickHandler}> {props.title}</span>
     )
 }

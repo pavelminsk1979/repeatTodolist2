@@ -1,8 +1,10 @@
 import React from 'react';
 import {FilterType, TaskType} from "./App";
-import st from './Todolist.module.css';
+import DeleteSweepIcon from '@material-ui/icons/DeleteSweep';
 import {TemplateCreatingTaskTudulist} from "./TemplateCreatingTaskTudulist";
 import {TemplateEditTitle} from "./TemplateEditTitle";
+import {Button, Checkbox, IconButton} from "@material-ui/core";
+import {DeleteOutline} from "@material-ui/icons";
 
 type TodolistType = {
     header: string
@@ -15,7 +17,7 @@ type TodolistType = {
     todolistId: string
     removeTodolist: (idTodol: string) => void
     editTodolistTitle: (idTodol: string, editTitle: string) => void
-    editTaskTitle: (idTodol: string,idTask: string,editTitle: string) => void
+    editTaskTitle: (idTodol: string, idTask: string, editTitle: string) => void
 }
 
 export function Todolist(props: TodolistType) {
@@ -45,7 +47,7 @@ export function Todolist(props: TodolistType) {
     }
 
     const editTaskTitleHandler = (idTask: string, editTitle: string) => {
-      props.editTaskTitle(props.todolistId,idTask,editTitle)
+        props.editTaskTitle(props.todolistId, idTask, editTitle)
     }
 
 
@@ -57,8 +59,13 @@ export function Todolist(props: TodolistType) {
                         callback={editTodolistTitleHandler}
                         title={props.header}
                     />
-
-                    <button onClick={removeTodolistHandler}>del</button>
+                    <IconButton
+                        style={{
+                            color: "crimson",
+                        }}
+                        onClick={removeTodolistHandler}>
+                        <DeleteOutline/>
+                    </IconButton>
                 </h3>
 
                 <TemplateCreatingTaskTudulist
@@ -70,37 +77,79 @@ export function Todolist(props: TodolistType) {
                         props.tasks.map(tsk => {
                             return (
                                 <li key={tsk.id}>
-                                    <input
+                                    <Checkbox
+                                        style={{
+                                            color: "purple",
+                                        }}
+                                        size={"small"}
                                         onChange={(event) =>
                                             changeCheckboxHandler(tsk.id,
                                                 event.currentTarget.checked)}
-                                        type="checkbox"
                                         checked={tsk.isDone}
+                                        defaultChecked
+                                        color="primary"
+                                        inputProps={{ 'aria-label': 'secondary checkbox' }}
                                     />
                                     <TemplateEditTitle
                                         title={tsk.title}
                                         callback={
                                             (editTitle: string) => editTaskTitleHandler(
                                                 tsk.id, editTitle)}/>
-                                    <button onClick={() => removeHundler(tsk.id)}>remove</button>
+                                    <IconButton
+                                        style={{
+                                            color: "crimson",
+                                        }}
+                                        size="small"
+                                        onClick={() => removeHundler(tsk.id)}>
+                                        <DeleteSweepIcon/>
+                                    </IconButton>
                                 </li>
                             )
                         })
                     }
                 </ul>
                 <div>
-                    <button className={props.filterValue === 'all' ? st.buttonFilter : ''}
-                            onClick={() => filterTasksHandler(
-                                props.todolistId, 'all')}>ALL
-                    </button>
-                    <button className={props.filterValue === 'yes' ? st.buttonFilter : ''}
-                            onClick={() => filterTasksHandler(
-                                props.todolistId, 'yes')}>YES
-                    </button>
-                    <button className={props.filterValue === 'no' ? st.buttonFilter : ''}
-                            onClick={() => filterTasksHandler(
-                                props.todolistId, 'no')}>NO
-                    </button>
+
+
+                    <Button
+                        style={{
+                            maxWidth: '60px',
+                            maxHeight: '25px',
+                            minWidth: '60px',
+                            minHeight: '25px',
+                            backgroundColor: props.filterValue === 'all' ? 'purple' : 'green',
+                            color: "white",
+
+                        }}
+                        onClick={() => filterTasksHandler(
+                            props.todolistId, 'all')}>ALL
+                    </Button>
+                    <Button
+                        style={{
+                            maxWidth: '60px',
+                            maxHeight: '25px',
+                            minWidth: '60px',
+                            minHeight: '25px',
+                            backgroundColor: props.filterValue === 'yes' ? 'purple' : 'green',
+                            color: "white",
+                            marginLeft: '10px'
+                        }}
+                        onClick={() => filterTasksHandler(
+                            props.todolistId, 'yes')}>YES
+                    </Button>
+                    <Button
+                        style={{
+                            maxWidth: '60px',
+                            maxHeight: '25px',
+                            minWidth: '60px',
+                            minHeight: '25px',
+                            backgroundColor: props.filterValue === 'no' ? 'purple' : 'green',
+                            color: "white",
+                            marginLeft: '10px'
+                        }}
+                        onClick={() => filterTasksHandler(
+                            props.todolistId, 'no')}>NO
+                    </Button>
                 </div>
             </div>
         </div>

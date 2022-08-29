@@ -1,5 +1,7 @@
 import st from "./Todolist.module.css";
 import React, {ChangeEvent, KeyboardEvent, useState} from "react";
+import {Button, IconButton, TextField} from "@material-ui/core";
+import DeleteSweepIcon from "@material-ui/icons/DeleteSweep";
 
 
 type TemplateCreatingTaskTudulistType={
@@ -32,15 +34,30 @@ export const TemplateCreatingTaskTudulist = (props:TemplateCreatingTaskTudulistT
 
   return(
       <div>
-        <input
-            className={inputRed?st.redInput:''}
-            onKeyPress={EnterForAddedTask}
-            value={text}
-            onChange={inputStateForText}
-        />
-        <button onClick={addedTaskHandler}>
+          <TextField
+              className={inputRed?st.redInput:''}
+              onKeyPress={EnterForAddedTask}
+              value={text}
+              onChange={inputStateForText}
+              size={'small'}
+              id="outlined-basic"
+              label="GOLD WORDS"
+              variant="outlined"
+          />
+
+        <Button
+            style={{
+                maxWidth: '75px',
+                maxHeight: '40px',
+                minWidth: '75px',
+                minHeight: '40px',
+                backgroundColor:'purple',
+                color: "white",
+
+            }}
+            onClick={addedTaskHandler}>
             {props.name}
-        </button>
+        </Button>
         {inputRed&&<div className={st.redAllert}>{inputRed}</div>}
       </div>
   )
