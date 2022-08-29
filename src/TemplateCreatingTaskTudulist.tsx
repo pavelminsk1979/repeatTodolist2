@@ -1,7 +1,7 @@
 import st from "./Todolist.module.css";
 import React, {ChangeEvent, KeyboardEvent, useState} from "react";
-import {Button, IconButton, TextField} from "@material-ui/core";
-import DeleteSweepIcon from "@material-ui/icons/DeleteSweep";
+import {Button, TextField} from "@material-ui/core";
+
 
 
 type TemplateCreatingTaskTudulistType={

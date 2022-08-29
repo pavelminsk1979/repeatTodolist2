@@ -117,7 +117,7 @@ export function Todolist(props: TodolistType) {
                             maxHeight: '25px',
                             minWidth: '60px',
                             minHeight: '25px',
-                            backgroundColor: props.filterValue === 'all' ? 'purple' : 'green',
+                            backgroundColor: props.filterValue === 'all' ? 'purple' : 'blue',
                             color: "white",
 
                         }}
@@ -130,7 +130,7 @@ export function Todolist(props: TodolistType) {
                             maxHeight: '25px',
                             minWidth: '60px',
                             minHeight: '25px',
-                            backgroundColor: props.filterValue === 'yes' ? 'purple' : 'green',
+                            backgroundColor: props.filterValue === 'yes' ? 'purple' : 'blue',
                             color: "white",
                             marginLeft: '10px'
                         }}
@@ -143,7 +143,7 @@ export function Todolist(props: TodolistType) {
                             maxHeight: '25px',
                             minWidth: '60px',
                             minHeight: '25px',
-                            backgroundColor: props.filterValue === 'no' ? 'purple' : 'green',
+                            backgroundColor: props.filterValue === 'no' ? 'purple' : 'blue',
                             color: "white",
                             marginLeft: '10px'
                         }}

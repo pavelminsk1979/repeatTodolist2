@@ -3,6 +3,7 @@ import './App.css';
 import {Todolist} from "./Todolist";
 import {v1} from "uuid";
 import {TemplateCreatingTaskTudulist} from "./TemplateCreatingTaskTudulist";
+import {AppBarComponent} from "./AppBar";
 
 
 export type TaskType = {
@@ -91,6 +92,7 @@ function App() {
 
     return (
         <div className="App">
+            <AppBarComponent/>
             <TemplateCreatingTaskTudulist
                 name={'new todolist'}
             callback={addedTodolistHandler}
