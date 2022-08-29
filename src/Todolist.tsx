@@ -72,11 +72,11 @@ export function Todolist(props: TodolistType) {
                     name={'new task'}
                     callback={addedTaskHandler}
                 />
-                <ul>
+                <div>
                     {
                         props.tasks.map(tsk => {
                             return (
-                                <li key={tsk.id}>
+                                <div key={tsk.id}>
                                     <Checkbox
                                         style={{
                                             color: "purple",
@@ -103,11 +103,11 @@ export function Todolist(props: TodolistType) {
                                         onClick={() => removeHundler(tsk.id)}>
                                         <DeleteSweepIcon/>
                                     </IconButton>
-                                </li>
+                                </div>
                             )
                         })
                     }
-                </ul>
+                </div>
                 <div>
 
 

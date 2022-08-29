@@ -4,6 +4,7 @@ import {Todolist} from "./Todolist";
 import {v1} from "uuid";
 import {TemplateCreatingTaskTudulist} from "./TemplateCreatingTaskTudulist";
 import {AppBarComponent} from "./AppBar";
+import {Container, Grid, Paper} from "@material-ui/core";
 
 
 export type TaskType = {
@@ -19,8 +20,8 @@ type TodolistsStateType = {
     filter: FilterType
 }
 
-type TasksStateType={
-[key:string]:Array<TaskType>
+type TasksStateType = {
+    [key: string]: Array<TaskType>
 }
 
 function App() {
@@ -46,42 +47,50 @@ function App() {
         }
     )
 
-    const editTaskTitle = (idTodol: string,idTask: string,editTitle: string) => {
-        setTasks({...tasks,[idTodol]:tasks[idTodol].map(
-            el=>el.id===idTask?{...el,title:editTitle}:el)})
+    const editTaskTitle = (idTodol: string, idTask: string, editTitle: string) => {
+        setTasks({
+            ...tasks, [idTodol]: tasks[idTodol].map(
+                el => el.id === idTask ? {...el, title: editTitle} : el)
+        })
     }
 
-    const editTodolistTitle = (idTodol: string,editTitle:string) => {
-        setTodolist(todolists.map(el=>el.id===idTodol
-        ?{...el,title:editTitle}:el))
+    const editTodolistTitle = (idTodol: string, editTitle: string) => {
+        setTodolist(todolists.map(el => el.id === idTodol
+            ? {...el, title: editTitle} : el))
     }
 
     const addedTodolistHandler = (text: string) => {
         const newTodolist1 = v1()
-        setTodolist([{id: newTodolist1, title: text, filter: 'all'},...todolists])
-        setTasks({...tasks,[newTodolist1]:[]})
+        setTodolist([{id: newTodolist1, title: text, filter: 'all'}, ...todolists])
+        setTasks({...tasks, [newTodolist1]: []})
     }
 
-    const removeTodolist = (idTodol:string) => {
-        setTodolist(todolists.filter(e=>e.id!==idTodol))
+    const removeTodolist = (idTodol: string) => {
+        setTodolist(todolists.filter(e => e.id !== idTodol))
         delete tasks[idTodol]
         setTasks({...tasks})
     }
 
-    const changeCheckboxTask = (idTodol:string,idTask: string, isDone: boolean) => {
-        setTasks({...tasks,[idTodol]:tasks[idTodol].map(
-            el=>el.id===idTask?{...el,isDone}:el
-            )})
+    const changeCheckboxTask = (idTodol: string, idTask: string, isDone: boolean) => {
+        setTasks({
+            ...tasks, [idTodol]: tasks[idTodol].map(
+                el => el.id === idTask ? {...el, isDone} : el
+            )
+        })
     }
 
-    const addedTask = (idTodol:string,text: string) => {
-        setTasks({...tasks,[idTodol]:[
-                {id: v1(), title: text, isDone: true},...tasks[idTodol]]})
+    const addedTask = (idTodol: string, text: string) => {
+        setTasks({
+            ...tasks, [idTodol]: [
+                {id: v1(), title: text, isDone: true}, ...tasks[idTodol]]
+        })
     }
 
-    const removeTask = (idTodol:string,idTask: string) => {
-        setTasks({...tasks,[idTodol]:tasks[idTodol].filter(
-            el=>el.id!==idTask)})
+    const removeTask = (idTodol: string, idTask: string) => {
+        setTasks({
+            ...tasks, [idTodol]: tasks[idTodol].filter(
+                el => el.id !== idTask)
+        })
     }
 
     const filterTasks = (idTodol: string, valueButtonFilter: FilterType) => {
@@ -93,40 +102,48 @@ function App() {
     return (
         <div className="App">
             <AppBarComponent/>
-            <TemplateCreatingTaskTudulist
-                name={'new todolist'}
-            callback={addedTodolistHandler}
-            />
-            {
-                todolists.map(todol => {
+            <Container fixed>
+                <Grid container style={{padding:'20px'}}>
 
-                    let tasksAfterFilter = tasks[todol.id]
-                    if (todol.filter === 'yes') {
-                        tasksAfterFilter = tasksAfterFilter.filter(el => el.isDone)
+                    <TemplateCreatingTaskTudulist
+                        name={'new todolist'}
+                        callback={addedTodolistHandler}
+                    />
+                </Grid>
+                <Grid container spacing={3}>
+                    {
+                        todolists.map(todol => {
+
+                            let tasksAfterFilter = tasks[todol.id]
+                            if (todol.filter === 'yes') {
+                                tasksAfterFilter = tasksAfterFilter.filter(el => el.isDone)
+                            }
+                            if (todol.filter === 'no') {
+                                tasksAfterFilter = tasksAfterFilter.filter(el => !el.isDone)
+                            }
+
+                            return <Grid item>
+                                <Paper style={{padding:'15px'}}>
+                                <Todolist
+                                    editTaskTitle={editTaskTitle}
+                                    editTodolistTitle={editTodolistTitle}
+                                    removeTodolist={removeTodolist}
+                                    todolistId={todol.id}
+                                    key={todol.id}
+                                    filterValue={todol.filter}
+                                    changeCheckboxTask={changeCheckboxTask}
+                                    addedTask={addedTask}
+                                    filterTasks={filterTasks}
+                                    removeTask={removeTask}
+                                    header={todol.title}
+                                    tasks={tasksAfterFilter}
+                                />
+                                </Paper>
+                            </Grid>
+                        })
                     }
-                    if (todol.filter === 'no') {
-                        tasksAfterFilter = tasksAfterFilter.filter(el => !el.isDone)
-                    }
-
-                    return (
-                        <Todolist
-                            editTaskTitle={editTaskTitle}
-                            editTodolistTitle={editTodolistTitle}
-                            removeTodolist={removeTodolist}
-                            todolistId={todol.id}
-                            key={todol.id}
-                            filterValue={todol.filter}
-                            changeCheckboxTask={changeCheckboxTask}
-                            addedTask={addedTask}
-                            filterTasks={filterTasks}
-                            removeTask={removeTask}
-                            header={todol.title}
-                            tasks={tasksAfterFilter}
-                        />
-                    )
-                })
-            }
-
+                </Grid>
+            </Container>
         </div>
     );
 }
