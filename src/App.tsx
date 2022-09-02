@@ -14,7 +14,7 @@ export type TaskType = {
 }
 export type FilterType = 'all' | 'yes' | 'no'
 
-type TodolistsStateType = {
+export type TodolistsStateType = {
     id: string
     title: string
     filter: FilterType
@@ -47,12 +47,6 @@ function App() {
         }
     )
 
-    const editTaskTitle = (idTodol: string, idTask: string, editTitle: string) => {
-        setTasks({
-            ...tasks, [idTodol]: tasks[idTodol].map(
-                el => el.id === idTask ? {...el, title: editTitle} : el)
-        })
-    }
 
     const editTodolistTitle = (idTodol: string, editTitle: string) => {
         setTodolist(todolists.map(el => el.id === idTodol
@@ -71,11 +65,25 @@ function App() {
         setTasks({...tasks})
     }
 
+    const statusFilterForTudulist = (idTodol: string, valueButtonFilter: FilterType) => {
+        setTodolist(todolists.map(el => el.id === idTodol
+            ? {...el, filter: valueButtonFilter} : el))
+    }
+
+
     const changeCheckboxTask = (idTodol: string, idTask: string, isDone: boolean) => {
         setTasks({
             ...tasks, [idTodol]: tasks[idTodol].map(
                 el => el.id === idTask ? {...el, isDone} : el
             )
+        })
+    }
+
+
+    const editTaskTitle = (idTodol: string, idTask: string, editTitle: string) => {
+        setTasks({
+            ...tasks, [idTodol]: tasks[idTodol].map(
+                el => el.id === idTask ? {...el, title: editTitle} : el)
         })
     }
 
@@ -93,10 +101,7 @@ function App() {
         })
     }
 
-    const filterTasks = (idTodol: string, valueButtonFilter: FilterType) => {
-        setTodolist(todolists.map(el => el.id === idTodol
-            ? {...el, filter: valueButtonFilter} : el))
-    }
+
 
 
     return (
@@ -133,7 +138,7 @@ function App() {
                                     filterValue={todol.filter}
                                     changeCheckboxTask={changeCheckboxTask}
                                     addedTask={addedTask}
-                                    filterTasks={filterTasks}
+                                    statusFilterForTudulist={statusFilterForTudulist}
                                     removeTask={removeTask}
                                     header={todol.title}
                                     tasks={tasksAfterFilter}

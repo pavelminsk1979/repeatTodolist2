@@ -1,0 +1,60 @@
+import {FilterType, TodolistsStateType} from "../App";
+import {v1} from "uuid";
+
+type ActionType = todolistRemoveACType|todolistAddedACType|todolistEditTitleACType|statusFilterForTudulistACType
+
+export const todolistReduser = (state: Array<TodolistsStateType>, action: ActionType) => {
+    switch (action.type) {
+        case 'REMOVE-TODOLIST': {
+            return state.filter(el=>el.id!==action.todolId)
+        }
+        case 'ADDED-TODOLIST': {
+            return [{id:v1(),title:action.newTodolistTitle,
+                filter:'all'},...state]
+        }
+        case 'EDIT-TITLE-TODOLIST': {
+            return state.map(el=>el.id===action.todolId
+                ?{...el,title:action.newEditTitleTodolist}:el)
+        }
+        case 'CHANGE-TODOLIST-FILTER': {
+            return state.map(el=>el.id===action.todolId
+            ?{...el,filter:action.newFilter}:el)
+        }
+        default:
+            return state
+    }
+}
+
+ type todolistRemoveACType=ReturnType<typeof todolistRemoveAC>
+export const todolistRemoveAC = (todolId:string) => {
+  return{
+      type:'REMOVE-TODOLIST',
+      todolId:todolId
+  }as const
+}
+
+type todolistAddedACType=ReturnType<typeof todolistAddedAC>
+export const todolistAddedAC = (newTodolistTitle:string) => {
+    return{
+        type:'ADDED-TODOLIST',
+        newTodolistTitle:newTodolistTitle
+    }as const
+}
+
+type todolistEditTitleACType=ReturnType<typeof todolistEditTitleAC>
+export const todolistEditTitleAC = (todolId:string,newEditTitleTodolist:string) => {
+    return{
+        type:'EDIT-TITLE-TODOLIST',
+        todolId:todolId,
+        newEditTitleTodolist:newEditTitleTodolist
+    }as const
+}
+
+type statusFilterForTudulistACType=ReturnType<typeof statusFilterForTudulistAC>
+export const statusFilterForTudulistAC = (todolId:string,newFilter:FilterType) => {
+    return{
+        type:'CHANGE-TODOLIST-FILTER',
+        todolId:todolId,
+        newFilter:newFilter
+    }as const
+}

@@ -10,7 +10,7 @@ type TodolistType = {
     header: string
     tasks: Array<TaskType>
     removeTask: (idTodol: string, idTask: string) => void
-    filterTasks: (idTodol: string, valueButtonFilter: FilterType) => void
+    statusFilterForTudulist: (idTodol: string, valueButtonFilter: FilterType) => void
     addedTask: (idTodol: string, text: string) => void
     changeCheckboxTask: (idTodol: string, idTask: string, isDone: boolean) => void
     filterValue: FilterType
@@ -35,7 +35,7 @@ export function Todolist(props: TodolistType) {
     }
 
     const filterTasksHandler = (idTodol: string, valueButtonFilter: FilterType) => {
-        props.filterTasks(idTodol, valueButtonFilter)
+        props.statusFilterForTudulist(idTodol, valueButtonFilter)
     }
 
     const changeCheckboxHandler = (idTask: string, isDone: boolean) => {

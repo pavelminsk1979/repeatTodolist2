@@ -4,7 +4,7 @@ import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import {createTheme, CssBaseline, ThemeProvider} from "@material-ui/core";
-import {blue, blueGrey, yellow} from "@material-ui/core/colors";
+import {blue, blueGrey} from "@material-ui/core/colors";
 
 
 const theme=createTheme({
