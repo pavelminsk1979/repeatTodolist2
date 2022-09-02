@@ -62,7 +62,7 @@ test ('correct filter of todolist should be changed ',()=>{
     const todolist1=v1()
     const todolist2=v1()
 
-    const newFilter='yes'
+const newFilter='yes'
 
     const startState:Array<TodolistsStateType>=[
         {id:todolist1,title:'What-WHAT to do',filter:'all'},
