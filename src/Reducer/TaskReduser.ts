@@ -1,11 +1,14 @@
 
 import {todolistAddedACType, todolistRemoveACType} from "./TodolistReduser";
-import {TasksStateType} from "../AppWithReduser";
+import {TasksStateType} from "../AppWithRedux";
+import {v1} from "uuid";
 
 
 type TaskReduserType=removeTaskACType|addedTaskACType|changeCheckboxTaskACType|editTitleTaskACType|todolistAddedACType|todolistRemoveACType
 
-export const taskReduser=(state:TasksStateType,action:TaskReduserType)=>{
+const initialStateTask:TasksStateType={}
+
+export const taskReduser=(state:TasksStateType=initialStateTask,action:TaskReduserType)=>{
     switch(action.type){
         case 'REMOVE-TASK':{
             return {...state,[action.todolId]:state[action.todolId].filter(
@@ -13,11 +16,12 @@ export const taskReduser=(state:TasksStateType,action:TaskReduserType)=>{
         }
         case 'ADDED-TASK':{
             return {...state,[action.todolId]:[{
-                    id: '0', title:action.newTaskTitle, isDone: false
+                    id: v1(), title:action.newTaskTitle, isDone: false
                 },...state[action.todolId]]}
 
         }
         case 'CHANGE-CHACKBOX-TASK':{
+           /* debugger*/
             return{...state,[action.todolId]:state[action.todolId].map(
                 el=>el.id===action.taskId ?{...el,isDone:action.isDone}:el)}
         }

@@ -4,7 +4,7 @@ import {TemplateCreatingTaskTudulist} from "./TemplateCreatingTaskTudulist";
 import {TemplateEditTitle} from "./TemplateEditTitle";
 import {Button, Checkbox, IconButton} from "@material-ui/core";
 import {DeleteOutline} from "@material-ui/icons";
-import {FilterType, TaskType} from "./AppWithReduser";
+import {FilterType, TaskType} from "./AppWithRedux";
 
 type TodolistType = {
     header: string

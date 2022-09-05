@@ -1,7 +1,6 @@
-import React, {useReducer} from 'react';
+import React from 'react';
 import './App.css';
 import {Todolist} from "./Todolist";
-import {v1} from "uuid";
 import {TemplateCreatingTaskTudulist} from "./TemplateCreatingTaskTudulist";
 import {AppBarComponent} from "./AppBar";
 import {Container, Grid, Paper} from "@material-ui/core";
@@ -9,10 +8,11 @@ import {
     statusFilterForTudulistAC,
     todolistAddedAC,
     todolistEditTitleAC,
-    todolistReduser,
     todolistRemoveAC
 } from "./Reducer/TodolistReduser";
-import {addedTaskAC, changeCheckboxTaskAC, editTitleTaskAC, removeTaskAC, taskReduser} from "./Reducer/TaskReduser";
+import {addedTaskAC, changeCheckboxTaskAC, editTitleTaskAC, removeTaskAC} from "./Reducer/TaskReduser";
+import {useDispatch, useSelector} from "react-redux";
+import {ReduxStoreStateType} from "./Redux/Store";
 
 
 export type TaskType = {
@@ -32,66 +32,49 @@ export type TasksStateType = {
     [key: string]: Array<TaskType>
 }
 
-function AppWithReduser() {
-    const todolist1 = v1()
-    const todolist2 = v1()
-    const [todolists, dispatchTodolist] = useReducer(todolistReduser, [
-        {id: todolist1, title: 'What to do', filter: 'all'},
-        {id: todolist2, title: 'What to buy', filter: 'yes'}
-    ])
-    const [tasks, dispatchTasks] = useReducer(taskReduser, {
-            [todolist1]: [
-                {id: v1(), title: 'Earn money', isDone: true},
-                {id: v1(), title: 'Play football', isDone: false},
-                {id: v1(), title: 'Eat food', isDone: true},
-                {id: v1(), title: 'Drink vodka', isDone: false},
-            ],
-            [todolist2]: [
-                {id: v1(), title: 'Red car', isDone: true},
-                {id: v1(), title: 'Green dollars', isDone: false},
-                {id: v1(), title: 'Black pistolet', isDone: true},
+function AppWithRedux() {
 
-            ],
-        }
-    )
+    const todolists = useSelector<ReduxStoreStateType, Array<TodolistsStateType>>(state => state.todolists)
+
+    const tasks = useSelector<ReduxStoreStateType, TasksStateType>(
+        state => state.tasks)
+
+    const dispatch=useDispatch()
 
 
     const editTodolistTitle = (idTodol: string, editTitle: string) => {
-        dispatchTodolist(todolistEditTitleAC(idTodol, editTitle))
+        dispatch(todolistEditTitleAC(idTodol, editTitle))
     }
 
     const addedTodolistHandler = (text: string) => {
-        const action = todolistAddedAC(text)
-        dispatchTodolist(action)
-        dispatchTasks(action)
+        dispatch(todolistAddedAC(text))
     }
 
     const removeTodolist = (idTodol: string) => {
-        const action = todolistRemoveAC(idTodol)
-        dispatchTodolist(action)
-        dispatchTasks(action)
+        dispatch(todolistRemoveAC(idTodol))
     }
 
     const statusFilterForTudulist = (idTodol: string, valueButtonFilter: FilterType) => {
-        dispatchTodolist(statusFilterForTudulistAC(idTodol, valueButtonFilter))
+        dispatch(statusFilterForTudulistAC(idTodol, valueButtonFilter))
     }
 
 
     const changeCheckboxTask = (idTodol: string, idTask: string, isDone: boolean) => {
-        dispatchTasks(changeCheckboxTaskAC(idTodol,idTask,isDone))
+        /*debugger*/
+        dispatch(changeCheckboxTaskAC(idTodol, idTask, isDone))
     }
 
 
     const editTaskTitle = (idTodol: string, idTask: string, editTitle: string) => {
-        dispatchTasks(editTitleTaskAC(idTodol,idTask,editTitle))
+        dispatch(editTitleTaskAC(idTodol, idTask, editTitle))
     }
 
     const addedTask = (idTodol: string, text: string) => {
-        dispatchTasks(addedTaskAC(idTodol,text))
+        dispatch(addedTaskAC(idTodol, text))
     }
 
     const removeTask = (idTodol: string, idTask: string) => {
-        dispatchTasks(removeTaskAC(idTodol,idTask))
+        dispatch(removeTaskAC(idTodol, idTask))
     }
 
 
@@ -144,4 +127,4 @@ function AppWithReduser() {
     );
 }
 
-export default AppWithReduser;
+export default AppWithRedux;

@@ -4,7 +4,9 @@ import './index.css';
 import reportWebVitals from './reportWebVitals';
 import {createTheme, CssBaseline, ThemeProvider} from "@material-ui/core";
 import {blue, blueGrey} from "@material-ui/core/colors";
-import AppWithReduser from "./AppWithReduser";
+import AppWithRedux from "./AppWithRedux";
+import {Provider} from "react-redux";
+import {store} from "./Redux/Store";
 
 
 const theme=createTheme({
@@ -19,10 +21,12 @@ const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
 );
 root.render(
+    <Provider store={store}>
     <ThemeProvider theme={theme}>
         <CssBaseline/>
-    <AppWithReduser />
+    <AppWithRedux />
     </ThemeProvider>
+    </Provider>
 );
 
 // If you want to start measuring performance in your app, pass a function
