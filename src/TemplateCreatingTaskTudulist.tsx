@@ -1,5 +1,5 @@
 import st from "./Todolist.module.css";
-import React, {ChangeEvent, KeyboardEvent, useState} from "react";
+import React, {ChangeEvent, KeyboardEvent, memo, useState} from "react";
 import {Button, TextField} from "@material-ui/core";
 
 
@@ -9,14 +9,14 @@ type TemplateCreatingTaskTudulistType={
     name:string
 }
 
-export const TemplateCreatingTaskTudulist = (props:TemplateCreatingTaskTudulistType) => {
-
+export const TemplateCreatingTaskTudulist = memo((props:TemplateCreatingTaskTudulistType) => {
     const [text, setText] = useState('')
     const [inputRed, setInputRed] = useState<string | null>(null)
 
     const inputStateForText = (event: ChangeEvent<HTMLInputElement>) => {
         setText(event.currentTarget.value)
-        setInputRed(null)
+        if(inputRed!==null){setInputRed(null)}
+
     }
 
     const EnterForAddedTask = (event: KeyboardEvent<HTMLInputElement>) => {
@@ -30,6 +30,7 @@ export const TemplateCreatingTaskTudulist = (props:TemplateCreatingTaskTudulistT
             props.callback(text.trim())
         }else {setInputRed('Text requaried!')}
         setText('')
+
     }
 
   return(
@@ -61,4 +62,4 @@ export const TemplateCreatingTaskTudulist = (props:TemplateCreatingTaskTudulistT
         {inputRed&&<div className={st.redAllert}>{inputRed}</div>}
       </div>
   )
-}
+})

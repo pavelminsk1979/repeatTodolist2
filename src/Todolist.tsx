@@ -1,10 +1,11 @@
-import React from 'react';
+import React, {memo, useCallback} from 'react';
 import DeleteSweepIcon from '@material-ui/icons/DeleteSweep';
 import {TemplateCreatingTaskTudulist} from "./TemplateCreatingTaskTudulist";
 import {TemplateEditTitle} from "./TemplateEditTitle";
 import {Button, Checkbox, IconButton} from "@material-ui/core";
 import {DeleteOutline} from "@material-ui/icons";
 import {FilterType, TaskType} from "./AppWithRedux";
+import {Task} from "./Task";
 
 type TodolistType = {
     header: string
@@ -20,34 +21,43 @@ type TodolistType = {
     editTaskTitle: (idTodol: string, idTask: string, editTitle: string) => void
 }
 
-export function Todolist(props: TodolistType) {
+export const Todolist=memo((props: TodolistType)=> {
+    console.log('Todolist')
 
-    const addedTaskHandler = (text: string) => {
+    const addedTaskHandler = useCallback((text: string) => {
         props.addedTask(props.todolistId, text)
-    }
+    },[ props.addedTask,props.todolistId])
 
     const removeTodolistHandler = () => {
         props.removeTodolist(props.todolistId)
     }
 
-    const removeHundler = (idTask: string) => {
+    const removeHundler = useCallback((idTask: string) => {
         props.removeTask(props.todolistId, idTask)
-    }
+    },[props.removeTask,props.todolistId])
 
     const filterTasksHandler = (idTodol: string, valueButtonFilter: FilterType) => {
         props.statusFilterForTudulist(idTodol, valueButtonFilter)
     }
 
-    const changeCheckboxHandler = (idTask: string, isDone: boolean) => {
+    const changeCheckboxHandler = useCallback((idTask: string, isDone: boolean) => {
         props.changeCheckboxTask(props.todolistId, idTask, isDone)
-    }
+    },[props.changeCheckboxTask,props.todolistId])
 
     const editTodolistTitleHandler = (editTitle: string) => {
         props.editTodolistTitle(props.todolistId, editTitle)
     }
 
-    const editTaskTitleHandler = (idTask: string, editTitle: string) => {
+    const editTaskTitleHandler = useCallback((idTask: string, editTitle: string) => {
         props.editTaskTitle(props.todolistId, idTask, editTitle)
+    },[props.editTaskTitle,props.todolistId])
+
+    let tasksAfterFilter = props.tasks
+    if (props.filterValue === 'yes') {
+        tasksAfterFilter = tasksAfterFilter.filter(el => el.isDone)
+    }
+    if (props.filterValue === 'no') {
+        tasksAfterFilter = tasksAfterFilter.filter(el => !el.isDone)
     }
 
 
@@ -74,35 +84,15 @@ export function Todolist(props: TodolistType) {
                 />
                 <div>
                     {
-                        props.tasks.map(tsk => {
+                        tasksAfterFilter.map(tsk => {
                             return (
-                                <div key={tsk.id}>
-                                    <Checkbox
-                                        style={{
-                                            color: "sienna",
-                                        }}
-                                        size={"small"}
-                                        onChange={(event) =>
-                                            changeCheckboxHandler(tsk.id,
-                                                event.currentTarget.checked)}
-                                        checked={tsk.isDone}
-                                        defaultChecked
-                                        inputProps={{ 'aria-label': 'secondary checkbox' }}
-                                    />
-                                    <TemplateEditTitle
-                                        title={tsk.title}
-                                        callback={
-                                            (editTitle: string) => editTaskTitleHandler(
-                                                tsk.id, editTitle)}/>
-                                    <IconButton
-                                        style={{
-                                            color: "crimson",
-                                        }}
-                                        size="small"
-                                        onClick={() => removeHundler(tsk.id)}>
-                                        <DeleteSweepIcon/>
-                                    </IconButton>
-                                </div>
+                            <Task
+                                editTaskTitle={editTaskTitleHandler}
+                                removeTask={removeHundler}
+                                changeCheckboxTask={changeCheckboxHandler}
+                                task={tsk}
+                                key={tsk.id}
+                            />
                             )
                         })
                     }
@@ -153,6 +143,6 @@ export function Todolist(props: TodolistType) {
             </div>
         </div>
     );
-}
+})
 
 
