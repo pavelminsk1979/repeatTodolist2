@@ -1,10 +1,10 @@
 import React from 'react';
-import {FilterType, TaskType} from "./App";
 import DeleteSweepIcon from '@material-ui/icons/DeleteSweep';
 import {TemplateCreatingTaskTudulist} from "./TemplateCreatingTaskTudulist";
 import {TemplateEditTitle} from "./TemplateEditTitle";
 import {Button, Checkbox, IconButton} from "@material-ui/core";
 import {DeleteOutline} from "@material-ui/icons";
+import {FilterType, TaskType} from "./AppWithReduser";
 
 type TodolistType = {
     header: string

@@ -1,5 +1,4 @@
 import {v1} from "uuid";
-import {TodolistsStateType} from "../App";
 import {
     statusFilterForTudulistAC,
     todolistAddedAC,
@@ -7,16 +6,26 @@ import {
     todolistReduser,
     todolistRemoveAC
 } from "./TodolistReduser";
+import {TodolistsStateType} from "../AppWithReduser";
 
+let todolist1:string;
+let todolist2:string;
 
-test ('correct todolist should be removed',()=>{
-    const todolist1=v1()
-    const todolist2=v1()
+let startState:Array<TodolistsStateType>;
 
-    const startState:Array<TodolistsStateType>=[
+beforeEach(()=>{
+     todolist1=v1()
+    todolist2=v1()
+
+    startState=[
         {id:todolist1,title:'What-WHAT to do',filter:'all'},
         {id:todolist2,title:'What-WHAT to buy',filter:'all'},
     ]
+})
+
+
+test ('correct todolist should be removed',()=>{
+
     const endState=todolistReduser(startState,todolistRemoveAC(todolist1))
 
     expect(endState.length).toBe(1)
@@ -25,32 +34,20 @@ test ('correct todolist should be removed',()=>{
 })
 
 test ('correct todolist should be added',()=>{
-    const todolist1=v1()
-    const todolist2=v1()
 
-    const newTodolistTitle='New Cool Todolist'
 
-    const startState:Array<TodolistsStateType>=[
-        {id:todolist1,title:'What-WHAT to do',filter:'all'},
-        {id:todolist2,title:'What-WHAT to buy',filter:'all'},
-    ]
-    const endState=todolistReduser(startState,todolistAddedAC(newTodolistTitle))
+const text='New Cool Todolist'
+    const endState=todolistReduser(startState,todolistAddedAC(text))
 
     expect(endState.length).toBe(3)
-    expect(endState[0].title).toBe(newTodolistTitle)
+    expect(endState[0].title).toBe('New Cool Todolist')
 
 })
 
 test ('correct todolist should change its name',()=>{
-    const todolist1=v1()
-    const todolist2=v1()
 
 const newEditTitleTodolist='Edit Title'
 
-    const startState:Array<TodolistsStateType>=[
-        {id:todolist1,title:'What-WHAT to do',filter:'all'},
-        {id:todolist2,title:'What-WHAT to buy',filter:'all'},
-    ]
     const endState=todolistReduser(startState,todolistEditTitleAC(todolist1,newEditTitleTodolist))
 
     expect(endState[0].title).toBe('Edit Title')
@@ -59,15 +56,9 @@ const newEditTitleTodolist='Edit Title'
 })
 
 test ('correct filter of todolist should be changed ',()=>{
-    const todolist1=v1()
-    const todolist2=v1()
 
 const newFilter='yes'
 
-    const startState:Array<TodolistsStateType>=[
-        {id:todolist1,title:'What-WHAT to do',filter:'all'},
-        {id:todolist2,title:'What-WHAT to buy',filter:'all'},
-    ]
     const endState=todolistReduser(startState,statusFilterForTudulistAC(todolist1,newFilter))
 
     expect(endState[0].filter).toBe('yes')

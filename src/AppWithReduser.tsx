@@ -1,10 +1,18 @@
-import React, {useState} from 'react';
+import React, {useReducer} from 'react';
 import './App.css';
 import {Todolist} from "./Todolist";
 import {v1} from "uuid";
 import {TemplateCreatingTaskTudulist} from "./TemplateCreatingTaskTudulist";
 import {AppBarComponent} from "./AppBar";
 import {Container, Grid, Paper} from "@material-ui/core";
+import {
+    statusFilterForTudulistAC,
+    todolistAddedAC,
+    todolistEditTitleAC,
+    todolistReduser,
+    todolistRemoveAC
+} from "./Reducer/TodolistReduser";
+import {addedTaskAC, changeCheckboxTaskAC, editTitleTaskAC, removeTaskAC, taskReduser} from "./Reducer/TaskReduser";
 
 
 export type TaskType = {
@@ -24,14 +32,14 @@ export type TasksStateType = {
     [key: string]: Array<TaskType>
 }
 
-function App() {
+function AppWithReduser() {
     const todolist1 = v1()
     const todolist2 = v1()
-    const [todolists, setTodolist] = useState<Array<TodolistsStateType>>([
+    const [todolists, dispatchTodolist] = useReducer(todolistReduser, [
         {id: todolist1, title: 'What to do', filter: 'all'},
         {id: todolist2, title: 'What to buy', filter: 'yes'}
     ])
-    const [tasks, setTasks] = useState<TasksStateType>({
+    const [tasks, dispatchTasks] = useReducer(taskReduser, {
             [todolist1]: [
                 {id: v1(), title: 'Earn money', isDone: true},
                 {id: v1(), title: 'Play football', isDone: false},
@@ -49,66 +57,49 @@ function App() {
 
 
     const editTodolistTitle = (idTodol: string, editTitle: string) => {
-        setTodolist(todolists.map(el => el.id === idTodol
-            ? {...el, title: editTitle} : el))
+        dispatchTodolist(todolistEditTitleAC(idTodol, editTitle))
     }
 
     const addedTodolistHandler = (text: string) => {
-        const newTodolist1 = v1()
-        setTodolist([{id: newTodolist1, title: text, filter: 'all'}, ...todolists])
-        setTasks({...tasks, [newTodolist1]: []})
+        const action = todolistAddedAC(text)
+        dispatchTodolist(action)
+        dispatchTasks(action)
     }
 
     const removeTodolist = (idTodol: string) => {
-        setTodolist(todolists.filter(e => e.id !== idTodol))
-        delete tasks[idTodol]
-        setTasks({...tasks})
+        const action = todolistRemoveAC(idTodol)
+        dispatchTodolist(action)
+        dispatchTasks(action)
     }
 
     const statusFilterForTudulist = (idTodol: string, valueButtonFilter: FilterType) => {
-        setTodolist(todolists.map(el => el.id === idTodol
-            ? {...el, filter: valueButtonFilter} : el))
+        dispatchTodolist(statusFilterForTudulistAC(idTodol, valueButtonFilter))
     }
 
 
     const changeCheckboxTask = (idTodol: string, idTask: string, isDone: boolean) => {
-        setTasks({
-            ...tasks, [idTodol]: tasks[idTodol].map(
-                el => el.id === idTask ? {...el, isDone} : el
-            )
-        })
+        dispatchTasks(changeCheckboxTaskAC(idTodol,idTask,isDone))
     }
 
 
     const editTaskTitle = (idTodol: string, idTask: string, editTitle: string) => {
-        setTasks({
-            ...tasks, [idTodol]: tasks[idTodol].map(
-                el => el.id === idTask ? {...el, title: editTitle} : el)
-        })
+        dispatchTasks(editTitleTaskAC(idTodol,idTask,editTitle))
     }
 
     const addedTask = (idTodol: string, text: string) => {
-        setTasks({
-            ...tasks, [idTodol]: [
-                {id: v1(), title: text, isDone: true}, ...tasks[idTodol]]
-        })
+        dispatchTasks(addedTaskAC(idTodol,text))
     }
 
     const removeTask = (idTodol: string, idTask: string) => {
-        setTasks({
-            ...tasks, [idTodol]: tasks[idTodol].filter(
-                el => el.id !== idTask)
-        })
+        dispatchTasks(removeTaskAC(idTodol,idTask))
     }
-
-
 
 
     return (
         <div className="App">
             <AppBarComponent/>
             <Container fixed>
-                <Grid container style={{padding:'20px'}}>
+                <Grid container style={{padding: '20px'}}>
 
                     <TemplateCreatingTaskTudulist
                         name={'new todolist'}
@@ -128,21 +119,21 @@ function App() {
                             }
 
                             return <Grid item>
-                                <Paper style={{padding:'15px'}}>
-                                <Todolist
-                                    editTaskTitle={editTaskTitle}
-                                    editTodolistTitle={editTodolistTitle}
-                                    removeTodolist={removeTodolist}
-                                    todolistId={todol.id}
-                                    key={todol.id}
-                                    filterValue={todol.filter}
-                                    changeCheckboxTask={changeCheckboxTask}
-                                    addedTask={addedTask}
-                                    statusFilterForTudulist={statusFilterForTudulist}
-                                    removeTask={removeTask}
-                                    header={todol.title}
-                                    tasks={tasksAfterFilter}
-                                />
+                                <Paper style={{padding: '15px'}}>
+                                    <Todolist
+                                        editTaskTitle={editTaskTitle}
+                                        editTodolistTitle={editTodolistTitle}
+                                        removeTodolist={removeTodolist}
+                                        todolistId={todol.id}
+                                        key={todol.id}
+                                        filterValue={todol.filter}
+                                        changeCheckboxTask={changeCheckboxTask}
+                                        addedTask={addedTask}
+                                        statusFilterForTudulist={statusFilterForTudulist}
+                                        removeTask={removeTask}
+                                        header={todol.title}
+                                        tasks={tasksAfterFilter}
+                                    />
                                 </Paper>
                             </Grid>
                         })
@@ -153,4 +144,4 @@ function App() {
     );
 }
 
-export default App;
+export default AppWithReduser;

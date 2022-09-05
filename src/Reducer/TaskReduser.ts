@@ -1,5 +1,6 @@
-import {TasksStateType} from "../App";
+
 import {todolistAddedACType, todolistRemoveACType} from "./TodolistReduser";
+import {TasksStateType} from "../AppWithReduser";
 
 
 type TaskReduserType=removeTaskACType|addedTaskACType|changeCheckboxTaskACType|editTitleTaskACType|todolistAddedACType|todolistRemoveACType
